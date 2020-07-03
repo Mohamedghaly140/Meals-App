@@ -1,13 +1,68 @@
-import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
-
+import React, { useState, useEffect, useCallback } from 'react';
+import { StyleSheet, View, Text, Switch } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
+
 import HeaderButton from '../components/HeadeButton';
+import Colors from '../constants/Colors';
+
+const FilterSwitch = props => {
+  return (
+    <View style={styles.filterContainer}>
+      <Text>{props.label}</Text>
+      <Switch
+        trackColor={{ true: Colors.primary }}
+        value={props.state}
+        onValueChange={props.onChaneg}
+      />
+    </View>
+  );
+};
 
 const FiltersScreen = props => {
+  const { navigation } = props;
+  const [isGlutenFree, setIsGlutenFree] = useState(false);
+  const [isLactoseFree, setIsLactoseFree] = useState(false);
+  const [isVegan, setIsVegan] = useState(false);
+  const [isVegetarian, setIsVegetarian] = useState(false);
+
+  const saveFilters = useCallback(() => {
+    const appliedFilters = {
+      glutenFree: isGlutenFree,
+      lactoseFree: isLactoseFree,
+      vegan: isVegan,
+      vegetarian: isVegetarian,
+    };
+
+    console.log(appliedFilters);
+  }, [isGlutenFree, isLactoseFree, isVegan, isVegetarian]);
+
+  useEffect(() => {
+    navigation.setParams({ save: saveFilters });
+  }, [saveFilters]);
+
   return (
     <View style={styles.screen}>
-      <Text>Filters Screen Screen</Text>
+      <Text style={styles.title}>Available Filters / Restrictions</Text>
+      <FilterSwitch
+        label='Gluten-free'
+        state={isGlutenFree}
+        onChaneg={newValue => setIsGlutenFree(newValue)}
+      />
+      <FilterSwitch
+        label='Lactose-free'
+        state={isLactoseFree}
+        onChaneg={newValue => setIsLactoseFree(newValue)}
+      />
+      <FilterSwitch
+        label='Vegan'
+        state={isVegan}
+        onChaneg={newValue => setIsVegan(newValue)}
+      />
+      <FilterSwitch
+        label='Vegetarian'
+        state={isVegetarian}
+        onChaneg={newValue => setIsVegetarian(newValue)}
+      />
     </View>
   );
 };
@@ -26,6 +81,15 @@ FiltersScreen.navigationOptions = navigationData => {
         />
       </HeaderButtons>
     ),
+    headerRight: () => (
+      <HeaderButtons HeaderButtonComponent={HeaderButton}>
+        <Item
+          title='save'
+          iconName='ios-save'
+          onPress={navigationData.navigation.getParam('save')}
+        />
+      </HeaderButtons>
+    ),
   };
 };
 
@@ -33,7 +97,20 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+  },
+  title: {
+    fontFamily: 'open-sans-bold',
+    fontSize: 22,
+    margin: 20,
+    textAlign: 'center',
+    borderBottomWidth: 2,
+  },
+  filterContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '75%',
+    marginVertical: 10,
   },
 });
 
