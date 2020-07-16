@@ -16,7 +16,7 @@ import Colors from '../constants/Colors';
 
 const defaultStackNavOptions = {
   headerStyle: {
-    backgroundColor: Platform.OS === 'android' ? Colors.primary : '#A9A9A9',
+    backgroundColor: Platform.OS === 'android' ? Colors.primary : '#fff',
   },
   headerTitleStyle: {
     fontFamily: 'open-sans-bold',

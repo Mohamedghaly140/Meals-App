@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { StatusBar } from 'react-native';
 import * as Font from 'expo-font';
 import { AppLoading } from 'expo';
 import { enableScreens } from 'react-native-screens';
@@ -37,6 +38,7 @@ export default function App() {
 
   return (
     <Provider store={store}>
+      <StatusBar barStyle='dark-content' />
       <MealsNavigator />
     </Provider>
   );
