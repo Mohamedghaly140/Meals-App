@@ -1,70 +1,55 @@
-import React from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  Platform,
-  TouchableOpacity,
-  TouchableNativeFeedback,
-} from 'react-native';
+import { Pressable, View, Text, StyleSheet, Platform } from 'react-native';
 
-const CategoryGridTile = props => {
-  let TouchableCmp = TouchableOpacity;
-
-  if (Platform.OS === 'android' && Platform.Version >= 21) {
-    TouchableCmp = TouchableNativeFeedback;
-  }
-
+function CategoryGridTile({ title, color, onPress }) {
   return (
     <View style={styles.gridItem}>
-      <TouchableCmp
-        activeOpacity={0.7}
-        style={styles.touch}
-        onPress={props.onSelect}
+      <Pressable
+        android_ripple={{ color: '#ccc' }}
+        style={({ pressed }) => [
+          styles.button,
+          pressed ? styles.buttonPressed : null,
+        ]}
+        onPress={onPress}
       >
-        <View
-          style={{ ...styles.container, ...{ backgroundColor: props.color } }}
-        >
-          <Text style={styles.title} numberOfLines={2}>
-            {props.title}
-          </Text>
+        <View style={[styles.innerContainer, { backgroundColor: color }]}>
+          <Text style={styles.title}>{title}</Text>
         </View>
-      </TouchableCmp>
+      </Pressable>
     </View>
   );
-};
+}
+
+export default CategoryGridTile;
 
 const styles = StyleSheet.create({
   gridItem: {
     flex: 1,
-    margin: 10,
+    margin: 16,
     height: 150,
-    elevation: 5,
-    borderRadius: 10,
-    overflow:
-      Platform.OS === 'android' && Platform.Version >= 21
-        ? 'hidden'
-        : 'visible',
+    borderRadius: 8,
+    elevation: 4,
+    backgroundColor: 'white',
+    shadowColor: 'black',
+    shadowOpacity: 0.25,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 8,
+    overflow: Platform.OS === 'android' ? 'hidden' : 'visible',
   },
-  touch: {
+  button: {
     flex: 1,
   },
-  container: {
+  buttonPressed: {
+    opacity: 0.5,
+  },
+  innerContainer: {
     flex: 1,
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOpacity: 0.26,
-    shadowOffset: { width: 0, height: 3 },
-    shadowRadius: 10,
-    padding: 12,
-    justifyContent: 'flex-end',
-    alignItems: 'flex-end',
+    padding: 16,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   title: {
-    fontFamily: 'open-sans-bold',
-    fontSize: 17,
-    textAlign: 'right',
+    fontWeight: 'bold',
+    fontSize: 18,
   },
 });
-
-export default CategoryGridTile;

@@ -1,48 +1,41 @@
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { useSelector } from 'react-redux';
-import { HeaderButtons, Item } from 'react-navigation-header-buttons';
-import MealList from '../components/MealList';
-import HeaderButton from '../components/HeadeButton';
-import BodyText from '../components/BodyText';
+// import { useContext } from 'react';
 
-const FavoritesScreen = props => {
-  const favMeals = useSelector(state => state.meals.favoriteMeals);
+import MealsList from '../components/MealsList/MealsList';
+// import { FavoritesContext } from '../store/context/favorites-context';
+import { MEALS } from '../data/dummy-data';
 
-  if (favMeals.length === 0 || !favMeals) {
+function FavoritesScreen() {
+  // const favoriteMealsCtx = useContext(FavoritesContext);
+  const favoriteMealIds = useSelector((state) => state.favoriteMeals.ids);
+
+  const favoriteMeals = MEALS.filter((meal) =>
+    favoriteMealIds.includes(meal.id)
+  );
+
+  if (favoriteMeals.length === 0) {
     return (
-      <View style={styles.fallBack}>
-        <BodyText>No favorite Meals found. Start adding some!</BodyText>
+      <View style={styles.rootContainer}>
+        <Text style={styles.text}>You have no favorite meals yet.</Text>
       </View>
     );
   }
 
-  return <MealList listData={favMeals} navigation={props.navigation} />;
-};
-
-FavoritesScreen.navigationOptions = navigationData => {
-  return {
-    headerTitle: 'Your Favorites',
-    headerLeft: () => (
-      <HeaderButtons HeaderButtonComponent={HeaderButton}>
-        <Item
-          title='menu'
-          iconName='ios-menu'
-          onPress={() => {
-            navigationData.navigation.toggleDrawer();
-          }}
-        />
-      </HeaderButtons>
-    ),
-  };
-};
-
-const styles = StyleSheet.create({
-  fallBack: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+  return <MealsList items={favoriteMeals} />;
+}
 
 export default FavoritesScreen;
+
+const styles = StyleSheet.create({
+  rootContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  text: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+});
